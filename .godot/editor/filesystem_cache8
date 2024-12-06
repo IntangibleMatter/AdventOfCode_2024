@@ -1,5 +1,6 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1733412399
+::res://::1733455318
+template.gd::GDScript::-1::1733455318::0::1::::<>SceneTree<>::
 ::res://01/::1733164609
 input.txt::TextFile::-1::1733140220::0::1::::<><>::
 part1.gd::GDScript::-1::1733160720::0::1::::<>SceneTree<>::
@@ -18,9 +19,14 @@ demoin.txt::TextFile::-1::1733358519::0::1::::<><>::
 input.txt::TextFile::-1::1733357200::0::1::::<><>::
 part1.gd::GDScript::-1::1733381952::0::1::::<>SceneTree<>::
 part2.gd::GDScript::-1::1733412195::0::1::::<>SceneTree<>::
-::res://05/::1733430264
+::res://05/::1733448842
 demoin2.txt::TextFile::-1::1733429767::0::1::::<><>::
 demoin.txt::TextFile::-1::1733412716::0::1::::<><>::
 input.txt::TextFile::-1::1733429705::0::1::::<><>::
 part1.gd::GDScript::-1::1733430193::0::1::::<>SceneTree<>::
-part2.gd::GDScript::-1::1733430264::0::1::::<>SceneTree<>::
+part2.gd::GDScript::-1::1733448842::0::1::::<>SceneTree<>::
+::res://06/::1733463706
+demoin.txt::TextFile::-1::1733462004::0::1::::<><>::
+input.txt::TextFile::-1::1733461290::0::1::::<><>::
+part1.gd::GDScript::-1::1733463655::0::1::::<>SceneTree<>::
+part2.gd::GDScript::-1::1733463706::0::1::::<>SceneTree<>::
