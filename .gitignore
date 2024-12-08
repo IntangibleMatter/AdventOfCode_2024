@@ -1,2 +1,5 @@
 # not supposed to share input
 input*.txt
+
+# friend's solution, not mine
+07/day7.py
