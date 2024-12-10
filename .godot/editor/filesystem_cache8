@@ -1,5 +1,5 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1733632542
+::res://::1733720093
 template.gd::GDScript::-1::1733455318::0::1::::<>SceneTree<>::
 ::res://01/::1733164609
 input.txt::TextFile::-1::1733140220::0::1::::<><>::
@@ -43,3 +43,10 @@ demoin.txt::TextFile::-1::1733635464::0::1::::<><>::
 input.txt::TextFile::-1::1733634738::0::1::::<><>::
 part1.gd::GDScript::-1::1733635571::0::1::::<>SceneTree<>::
 part2.gd::GDScript::-1::1733650060::0::1::::<>SceneTree<>::
+::res://09/::1733735040
+checktext.txt::TextFile::-1::1733723614::0::1::::<><>::
+demoin2.txt::TextFile::-1::1733723336::0::1::::<><>::
+demoin.txt::TextFile::-1::1733720415::0::1::::<><>::
+input.txt::TextFile::-1::1733720609::0::1::::<><>::
+part1.gd::GDScript::-1::1733724648::0::1::::<>SceneTree<>::
+part2.gd::GDScript::-1::1733735039::0::1::::<>SceneTree<>::
