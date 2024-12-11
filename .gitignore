@@ -3,3 +3,6 @@ input*.txt
 
 # friend's solution, not mine
 07/day7.py
+
+# 7.2 gb file from incomplete running version that used disk as swap space
+11/hold.txt
