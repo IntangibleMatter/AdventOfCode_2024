@@ -11,6 +11,8 @@ config_version=5
 [application]
 
 config/name="Advent of Code"
+config/use_custom_user_dir=true
+config/custom_user_dir_name="adventofcode_2024"
 config/features=PackedStringArray("4.2", "GL Compatibility")
 
 [debug]
