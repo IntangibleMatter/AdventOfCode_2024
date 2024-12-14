@@ -5,16 +5,15 @@ var pmachines: Array[PrizeMachine]
 
 
 func _init() -> void:
-	var f := FileAccess.open("./demoin.txt", FileAccess.READ)
+	var f := FileAccess.open("./input.txt", FileAccess.READ)
 
 	var na: Vector2i
 	var nb: Vector2i
-	var np: Vector2i
+	var np: PackedInt64Array
 	var re_x := RegEx.create_from_string("X\\+?=?(\\d+)")
 	var re_y := RegEx.create_from_string("Y\\+?=?(\\d+)")
 	while not f.eof_reached():
 		var line := f.get_line()
-		prints(line)
 		if line.begins_with("Button A"):
 			na = Vector2i(
 				int(re_x.search(line).strings[1]),
@@ -26,15 +25,18 @@ func _init() -> void:
 				int(re_y.search(line).strings[1]),
 			)
 		elif line.begins_with("Prize:"):
-			np = Vector2i(
+			#"""
+			np = [
 				int(re_x.search(line).strings[1]) + 10000000000000,
-				int(re_y.search(line).strings[1]) + 10000000000000,
-			)
+				int(re_y.search(line).strings[1]) + 10000000000000
+			]
+			#"""
+			#np = [int(re_x.search(line).strings[1]), int(re_y.search(line).strings[1])]
 		else:
 			pmachines.append(PrizeMachine.new(na, nb, np))
 			na = Vector2i.ZERO
 			nb = Vector2i.ZERO
-			np = Vector2i.ZERO
+			np = []
 	if na != Vector2i.ZERO:
 		pmachines.append(PrizeMachine.new(na, nb, np))
 
@@ -50,9 +52,9 @@ class PrizeMachine:
 	extends RefCounted
 	var abutton: Vector2i
 	var bbutton: Vector2i
-	var prize: Vector2i
+	var prize: PackedInt64Array
 
-	func _init(a: Vector2i, b: Vector2i, ppos: Vector2i) -> void:
+	func _init(a: Vector2i, b: Vector2i, ppos: PackedInt64Array) -> void:
 		abutton = a
 		bbutton = b
 		prize = ppos
@@ -85,63 +87,73 @@ class PrizeMachine:
 
 		return a << k
 
-	func find_any_diophine(a: int, b: int, c: int) -> Vector2i:
-		var g := gcd(a, b)
-		if c % g:
-			return Vector2i.ZERO
-		return Vector2i(a * (c / g), b * (c / g))
+	func gauss_elim(a: PackedFloat64Array, b: PackedFloat64Array) -> PackedFloat64Array:
+		# pivot first row
+		var a0 := a[0]
+		a[0] /= a0
+		a[1] /= a0
+		a[2] /= a0
+		prints("gausselim 0\n", a, "\n", b)
 
-	func shifted_solution(x: int, y: int, a: int, b: int, cnt: int) -> Vector2i:
-		return Vector2i(x + cnt * b, y - cnt * a)
+		# eliminate first column
+		var b0 := b[0]
+		b[0] -= (b0 * a[0])
+		b[1] -= (b0 * a[1])
+		b[2] -= (b0 * a[2])
+		prints("gausselim 1\n", a, "\n", b)
 
-	func find_all_diophine(a: int, b: int, c: int) -> Array[Vector2i]:
-		var any := find_any_diophine(a, b, c)
-		var solutions: Array[Vector2i]
+		#pivot second row
+		var b1 := b[1]
+		b[0] /= b1
+		b[1] /= b1
+		b[2] /= b1
+		prints("gausselim 2\n", a, "\n", b)
 
-		if any == Vector2i.ZERO:
-			return []
+		# eliminate second column
+		var a1 := a[1]
+		a[0] -= (a1 * b[0])
+		a[1] -= (a1 * b[1])
+		a[2] -= (a1 * b[2])
+		prints("gausselim 3\n", a, "\n", b)
 
-		var g := gcd(a, b)
-		var sol: Vector2i
-
-		a /= g
-		b /= g
-
-		return [Vector2i.ZERO]
+		return [a[2], b[2]]
 
 	func calculate_cost() -> int:
+		print()
 		var gcom: Vector2i = Vector2i(gcd(abutton.x, bbutton.x), gcd(abutton.y, bbutton.y))
-		prints("X", prize.x % gcom.x, "Y", prize.y % gcom.y)
-		if (prize.x % gcom.x) != 0:
-			prints("xxxNo solution for", gcom, abutton, bbutton, prize, prize.x % gcom.x)
+		prints("X", prize[0] % gcom.x, "Y", prize[1] % gcom.y)
+		if (prize[0] % gcom.x) != 0:
+			prints("xxxNo solution for", gcom, abutton, bbutton, prize, prize[0] % gcom.x)
 			return 0
-		elif (prize.y % gcom.y) != 0:
-			prints("yyyNo solution for", gcom, abutton, bbutton, prize, prize.y % gcom.y)
+		elif (prize[1] % gcom.y) != 0:
+			prints("yyyNo solution for", gcom, abutton, bbutton, prize, prize[1] % gcom.y)
 			return 0
 		prints("\tpossible solution for", abutton, bbutton, prize, "searching....")
 
-		var lowest: int = 1 << 20
-		var acount: int = 0
-		var bcount: int = 0
-
-		var loopcount: int = max(
-			prize.x / abutton.x, prize.x / bbutton.x, prize.y / abutton.y, prize.y / bbutton.y
+		var solution := gauss_elim(
+			[abutton.x, bbutton.x, prize[0]], [abutton.y, bbutton.y, prize[1]]
 		)
-		for a in loopcount:
-			prints("a", a, "\t", abutton, bbutton, prize)
-			for b in loopcount:
-				prints("b", b, "\t", abutton, bbutton, prize)
-				var calced: Vector2i = a * abutton + b * bbutton
-				if calced.x > prize.x or calced.y > prize.y:
-					print(":(")
-					break
-				elif calced == prize:
-					prints("found solution:", a, b)
-					if lowest > a * 3 + b * 1:
-						prints("Improvement!:", a, b)
-						lowest = a * 3 + b * 1
-						acount = a
-						bcount = b
-						break
-		prints("Machine", abutton, bbutton, prize, "\tCosts", acount * 3 + bcount * 1)
-		return acount * 3 + bcount * 1
+
+		prints("Solution?", abutton, bbutton, prize, solution)
+
+		if abs(solution[0] - round(solution[0])) < 0.01:
+			prints("X VALID")
+			if abs(solution[1] - round(solution[1])) < 0.01:
+				prints("Y VALID!!!!")
+			else:
+				solution = [0, 0]
+		else:
+			solution = [0, 0]
+
+		if solution[0] < 0 or solution[1] < 0:
+			prints("Solution negative :(")
+			solution = [0, 0]
+
+		var nsolution: PackedInt64Array = [round(solution[0]), round(solution[1])]
+
+		#var lowest: int = 1 << 20
+		#var acount: int = 0
+		#var bcount: int = 0
+		prints("Machine", abutton, bbutton, prize, "\tCosts", nsolution[0] * 3 + nsolution[1] * 1)
+		#	prints("Machine", abutton, bbutton, prize, "\tCosts", acount * 3 + bcount * 1)
+		return nsolution[0] * 3 + nsolution[1] * 1

@@ -13,6 +13,10 @@ config_version=5
 config/name="Advent of Code"
 config/features=PackedStringArray("4.2", "GL Compatibility")
 
+[debug]
+
+gdscript/warnings/integer_division=0
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
